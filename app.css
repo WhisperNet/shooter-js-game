@@ -6,6 +6,7 @@ body {
     /* Prevents scrollbars from appearing */
     height: 100%;
     /* Ensures the body takes full viewport height */
+    background-color: black;
 }
 
 canvas {
