@@ -91,7 +91,7 @@ function init() {
 
 function spawnEnemies() {
     let timer = 2000
-    setInterval(() => {
+    nIntervId = setInterval(() => {
         if (timer > 1500) {
             timer -= 100
         } else if (timer > 1000) {
@@ -121,7 +121,7 @@ function spawnEnemies() {
         }
 
         enemies.push(new Enemie(x, y, radius, color, velocity))
-        //console.log(enemies)
+        console.log(enemies)
     }, timer);
 }
 
@@ -155,6 +155,7 @@ function animate() {
             h1.innerHTML = score
             audio.stop()
             score = 0
+            clearInterval(nIntervId)
         }
         //Detecting projectile and enemy collsion 
         projectiles.forEach((projectile, pIndex) => {
