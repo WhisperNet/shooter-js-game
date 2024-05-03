@@ -73,14 +73,43 @@ function spawnEnemies() {
     }, 1000);
 }
 
+let animationId = null
 function animate() {
-    requestAnimationFrame(animate)
+    animationId = requestAnimationFrame(animate)
     ctx.clearRect(0, 0, can.width, can.height)
     player.draw()
-    projectiles.forEach(projectile => {
+    //Moving projectiles
+    projectiles.forEach((projectile, index) => {
         projectile.update()
+        // Removing offscreen projectiles
+        if (projectile.x + projectile.radius < 0 || projectile.x - projectile.radius > can.width
+            || projectile.y + projectile.radius < 0 || projectile.y - projectile.radius > can.height
+        ) {
+            setTimeout(() => {
+                projectiles.splice(index, 1)
+            }, 0)
+        }
     });
-    enemies.forEach(enm => enm.update())
+    // Moving enemy
+    enemies.forEach((enm, eIndex) => {
+        enm.update()
+        //detecting enemy->player collsion
+        const dist = Math.hypot(player.x - enm.x, player.y - enm.y)
+        if (dist <= player.radius + enm.radius) {
+            cancelAnimationFrame(animationId)
+        }
+        //Detecting projectile and enemy collsion 
+        projectiles.forEach((projectile, pIndex) => {
+            const dist = Math.hypot(projectile.x - enm.x, projectile.y - enm.y)
+            if (dist <= projectile.radius + enm.radius) {
+                //Turns off the flicker effect
+                setTimeout(() => {
+                    projectiles.splice(pIndex, 1)
+                    enemies.splice(eIndex, 1)
+                }, 0)
+            }
+        })
+    })
 }
 
 window.addEventListener('click', (e) => {
