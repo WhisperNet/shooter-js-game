@@ -2,9 +2,8 @@ const can = document.querySelector("canvas")
 
 //getting the canvas api
 const ctx = can.getContext('2d')
-
-can.height = window.innerHeight
-can.width = window.innerWidth
+can.width = window.innerWidth;
+can.height = window.innerHeight;
 
 class Player {
     constructor(x, y, radius, color) {
@@ -39,9 +38,17 @@ class Enemie extends Projectile {
     }
 }
 
-const x = can.width / 2
-const y = can.height / 2
-const player = new Player(x, y, 30, "blue")
+//canvas initialization and resizing
+let player
+function resizeCanvas() {
+    can.width = window.innerWidth;
+    can.height = window.innerHeight;
+    const x = can.width / 2
+    const y = can.height / 2
+    player = new Player(x, y, 15, "white")
+}
+resizeCanvas()
+window.addEventListener('resize', resizeCanvas)
 
 const projectiles = []
 const enemies = []
@@ -60,7 +67,7 @@ function spawnEnemies() {
             y = Math.random() > 0.5 ? 0 - radius : can.height + radius
         }
 
-        color = "green"
+        color = `hsl(${Math.random() * 360},50%,50%)`
 
         const angle = Math.atan2(can.height / 2 - y, can.width / 2 - x)
         const velocity = {
@@ -76,7 +83,8 @@ function spawnEnemies() {
 let animationId = null
 function animate() {
     animationId = requestAnimationFrame(animate)
-    ctx.clearRect(0, 0, can.width, can.height)
+    ctx.fillStyle = 'rgba(0,0,0,0.1)'
+    ctx.fillRect(0, 0, can.width, can.height)
     player.draw()
     //Moving projectiles
     projectiles.forEach((projectile, index) => {
@@ -115,10 +123,10 @@ function animate() {
 window.addEventListener('click', (e) => {
     const angle = Math.atan2(e.clientY - can.height / 2, e.clientX - can.width / 2)
     const velocity = {
-        x: Math.cos(angle),
-        y: Math.sin(angle)
+        x: Math.cos(angle) * 6,
+        y: Math.sin(angle) * 6
     }
-    projectiles.push(new Projectile(can.width / 2, can.height / 2, 5, "red", velocity))
+    projectiles.push(new Projectile(can.width / 2, can.height / 2, 5, "white", velocity))
 })
 
 animate()
